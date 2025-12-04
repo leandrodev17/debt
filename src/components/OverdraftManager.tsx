@@ -80,7 +80,7 @@ export const OverdraftManager: React.FC = () => {
             variant="contained"
             startIcon={<AddIcon />}
             onClick={handleOpen}
-            sx={{ backgroundColor: 'var(--accent-color)' }}
+            sx={{ backgroundColor: 'var(--accent-color)', color: '#ffffff', '&:hover': { backgroundColor: 'var(--accent-color-dark, #0056b3)' } }}
           >
             Adicionar
           </Button>
@@ -171,7 +171,7 @@ export const OverdraftManager: React.FC = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} sx={{ color: 'var(--text-secondary)' }}>Cancelar</Button>
-          <Button onClick={handleSubmit} variant="contained" sx={{ backgroundColor: 'var(--accent-color)' }}>Adicionar</Button>
+          <Button onClick={handleSubmit} variant="contained" sx={{ backgroundColor: 'var(--accent-color)', color: '#ffffff', '&:hover': { backgroundColor: 'var(--accent-color-dark, #0056b3)' } }}>Adicionar</Button>
         </DialogActions>
       </Dialog>
     </>
