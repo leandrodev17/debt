@@ -30,7 +30,7 @@ export const getFinancialAdvice = async (
   creditCards: any[],
   overdrafts: any[]
 ): Promise<FinancialAdvice> => {
-  const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+  const model = genAI.getGenerativeModel({ model: 'gemini-2.5-flash-lite' });
 
   const prompt = `
     Atue como um consultor financeiro pessoal experiente. Analise os seguintes dados financeiros e forneça um plano de ação detalhado e cronológico.
