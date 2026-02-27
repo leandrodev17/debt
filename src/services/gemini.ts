@@ -3,7 +3,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 // WARNING: In a real production app, this key should be in an environment variable
 // and ideally calls should be proxied through a backend to avoid exposing the key.
 // For this personal local app, we'll use it directly as requested.
-const API_KEY = 'AIzaSyAd_ZbBH09QQ1fDS27QLEFoAtqK4svVPfs';
+const API_KEY = 'AIzaSyCbCWdgqgQURv5AfuMHUuoInIt5nY0SkuQ';
 
 const genAI = new GoogleGenerativeAI(API_KEY);
 
