@@ -2,7 +2,7 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 import { useFinanceStore } from '../stores/useFinanceStore';
 import { useDebtStore } from '../stores/useDebtStore';
 
-const API_KEY = 'AIzaSyAd_ZbBH09QQ1fDS27QLEFoAtqK4svVPfs'; // Em produção, usar variável de ambiente
+const API_KEY = ''; // Em produção, usar variável de ambiente
 const genAI = new GoogleGenerativeAI(API_KEY);
 
 export interface ChatMessage {
