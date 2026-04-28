@@ -32,6 +32,8 @@ const monthOptions = [
   { value: '12', label: 'Dezembro' },
 ];
 
+const parseLocalDate = (value: string) => new Date(`${value}T00:00:00`);
+
 const buildYearOptions = (selectedYear: string) => {
   const currentYear = new Date().getFullYear();
   const range = Array.from({ length: 20 }, (_, i) => String(currentYear - 10 + i));
@@ -127,16 +129,16 @@ export const DateFilter: React.FC<{}> = () => {
   const getFilterLabel = () => {
     switch (dateFilter.type) {
       case 'day':
-        return `Dia: ${new Date(dateFilter.startDate!).toLocaleDateString('pt-BR')}`;
+        return `Dia: ${parseLocalDate(dateFilter.startDate!).toLocaleDateString('pt-BR')}`;
       case 'month':
-        return `Mês: ${new Date(dateFilter.startDate!).toLocaleDateString('pt-BR', {
+        return `Mês: ${parseLocalDate(dateFilter.startDate!).toLocaleDateString('pt-BR', {
           month: 'long',
           year: 'numeric',
         })}`;
       case 'year':
-        return `Ano: ${new Date(dateFilter.startDate!).getFullYear()}`;
+        return `Ano: ${parseLocalDate(dateFilter.startDate!).getFullYear()}`;
       case 'range':
-        return `De ${new Date(dateFilter.startDate!).toLocaleDateString('pt-BR')} a ${new Date(dateFilter.endDate!).toLocaleDateString('pt-BR')}`;
+        return `De ${parseLocalDate(dateFilter.startDate!).toLocaleDateString('pt-BR')} a ${parseLocalDate(dateFilter.endDate!).toLocaleDateString('pt-BR')}`;
       default:
         return 'Sem filtro';
     }
