@@ -31,6 +31,7 @@ interface DebtState {
   updateDebt: (id: string, debt: Partial<Debt>) => void;
   markAsPaid: (id: string) => void;
   unpayDebt: (id: string) => void;
+  clearAllDebts: () => void;
 }
 
 export const useDebtStore = create<DebtState>()(
@@ -66,6 +67,10 @@ export const useDebtStore = create<DebtState>()(
             d.id === id ? { ...d, status: 'pending', paymentInfo: undefined } : d
           ),
         })),
+      clearAllDebts: () =>
+        set({
+          debts: [],
+        }),
     }),
     {
       name: 'debt-storage',

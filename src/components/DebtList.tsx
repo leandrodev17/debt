@@ -24,16 +24,19 @@ import UndoIcon from '@mui/icons-material/Undo';
 import DownloadIcon from '@mui/icons-material/Download';
 import TableViewIcon from '@mui/icons-material/TableView';
 import AddIcon from '@mui/icons-material/Add';
+import DeleteSweepIcon from '@mui/icons-material/DeleteSweep';
 import { useDebtStore } from '../stores/useDebtStore';
 import { useFinanceStore } from '../stores/useFinanceStore';
+import { useFilterStore } from '../stores/useFilterStore';
 import type { Debt } from '../stores/useDebtStore';
 import { useValueVisibility } from '../hooks/useValueVisibility';
 import { DebtForm } from './DebtForm';
 import { PaymentDialog } from './PaymentDialog';
 
 export const DebtList: React.FC = () => {
-  const { debts, removeDebt, unpayDebt } = useDebtStore();
+  const { debts, removeDebt, unpayDebt, clearAllDebts } = useDebtStore();
   const { updateBalance, updateCreditCard, updateOverdraft } = useFinanceStore();
+  const { isDateInRange } = useFilterStore();
   const { formatValue } = useValueVisibility();
   const [openModal, setOpenModal] = useState(false);
   const [editingDebt, setEditingDebt] = useState<Debt | undefined>(undefined);
@@ -41,6 +44,7 @@ export const DebtList: React.FC = () => {
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
   const [selectedDebtForPayment, setSelectedDebtForPayment] = useState<Debt | null>(null);
+  const [openClearDialog, setOpenClearDialog] = useState(false);
 
   const handleOpenModal = () => {
     setEditingDebt(undefined);
@@ -78,8 +82,10 @@ export const DebtList: React.FC = () => {
     });
   };
 
-  const pendingDebts = sortDebts(debts.filter(d => d.status !== 'paid'));
-  const paidDebts = sortDebts(debts.filter(d => d.status === 'paid'));
+  // Aplicar filtro de datas
+  const filteredDebts = debts.filter(d => isDateInRange(d.dueDate));
+  const pendingDebts = sortDebts(filteredDebts.filter(d => d.status !== 'paid'));
+  const paidDebts = sortDebts(filteredDebts.filter(d => d.status === 'paid'));
 
   const exportToJSON = () => {
     const jsonString = JSON.stringify(debts, null, 2);
@@ -277,6 +283,22 @@ export const DebtList: React.FC = () => {
             >
               Novo Débito
             </Button>
+            <Button
+              variant="contained"
+              startIcon={<DeleteSweepIcon />}
+              onClick={() => setOpenClearDialog(true)}
+              size="small"
+              disabled={debts.length === 0}
+              sx={{
+                backgroundColor: 'var(--primary-color)',
+                color: 'white',
+                '&:hover': {
+                  backgroundColor: '#1f4ec6',
+                },
+              }}
+            >
+              Limpar Todos
+            </Button>
           </Box>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Button 
@@ -379,6 +401,52 @@ export const DebtList: React.FC = () => {
           setSelectedDebtForPayment(null);
         }}
       />
+
+      <Dialog 
+        open={openClearDialog}
+        onClose={() => setOpenClearDialog(false)}
+        PaperProps={{
+          sx: {
+            backgroundColor: 'var(--surface-color)',
+            color: 'var(--text-primary)',
+            backgroundImage: 'none',
+            border: '1px solid var(--glass-border)'
+          }
+        }}
+      >
+        <DialogTitle sx={{ borderBottom: '1px solid var(--glass-border)' }}>
+          Confirmar Limpeza
+        </DialogTitle>
+        <DialogContent sx={{ mt: 2 }}>
+          <Typography>
+            Tem certeza que deseja limpar TODOS os registros de débitos? Esta ação não pode ser desfeita.
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ borderTop: '1px solid var(--glass-border)', p: 2, gap: 1 }}>
+          <Button 
+            onClick={() => setOpenClearDialog(false)}
+            sx={{ color: 'var(--text-secondary)' }}
+          >
+            Cancelar
+          </Button>
+          <Button 
+            onClick={() => {
+              clearAllDebts();
+              setOpenClearDialog(false);
+            }}
+            variant="contained"
+            sx={{
+              backgroundColor: '#ff6b6b',
+              color: 'white',
+              '&:hover': {
+                backgroundColor: '#ff5252',
+              }
+            }}
+          >
+            Limpar Todos
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };
